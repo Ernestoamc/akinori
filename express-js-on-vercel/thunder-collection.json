@@ -1,0 +1,451 @@
+{
+  "client": "Thunder Client",
+  "collectionName": "Backend Arquitectura API",
+  "dateExported": "2026-02-19",
+  "version": "1.1",
+  "folders": [
+    {
+      "name": "Auth",
+      "requests": [
+        {
+          "name": "Login",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/auth/login",
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"password\": \"admin123\"\n}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profile",
+      "requests": [
+        {
+          "name": "Get Profile",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/profile"
+        },
+        {
+          "name": "Update Profile",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/profile",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Ernesto Akinori\",\n  \"title\": \"Arquitecto & Diseñador\",\n  \"logoName\": \"ARQUINORI\",\n  \"heroSubtitle\": \"Portafolio 2025\",\n  \"heroTitlePrimary\": \"ERNESTO\",\n  \"heroTitleSecondary\": \"AKINORI\",\n  \"about\": \"Arquitecto con enfoque en espacios contemporaneos\",\n  \"phone\": \"+52 55 1234 5678\",\n  \"email\": \"ernesto@example.com\",\n  \"address\": \"Culiacan, Sinaloa\",\n  \"portraitUrl\": \"https://res.cloudinary.com/.../portrait.jpg\",\n  \"formalUrl\": \"https://res.cloudinary.com/.../formal.jpg\",\n  \"socials\": {\n    \"linkedin\": \"https://linkedin.com/in/ernesto\",\n    \"instagram\": \"https://instagram.com/ernesto\",\n    \"behance\": \"https://behance.net/ernesto\"\n  }\n}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload",
+      "requests": [
+        {
+          "name": "Upload Image",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/upload",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ],
+          "body": {
+            "type": "formdata",
+            "formdata": [
+              {
+                "name": "image",
+                "type": "file",
+                "value": ""
+              }
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "Projects",
+      "requests": [
+        {
+          "name": "Get All Projects",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/projects"
+        },
+        {
+          "name": "Get Project by ID",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/projects/:id"
+        },
+        {
+          "name": "Create Project",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/projects",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"title\": \"Casa Moderna\",\n  \"description\": \"Diseño contemporáneo con enfoque sustentable\",\n  \"category\": \"Residencial\",\n  \"location\": \"Ciudad de México\",\n  \"year\": \"2024\",\n  \"tags\": [\"Minimalista\", \"Concreto\", \"Sustentable\"],\n  \"images\": [\n    {\n      \"url\": \"https://res.cloudinary.com/.../render1.jpg\",\n      \"type\": \"render\",\n      \"caption\": \"Fachada Principal\"\n    },\n    {\n      \"url\": \"https://res.cloudinary.com/.../plan1.jpg\",\n      \"type\": \"plan\",\n      \"caption\": \"Planta Baja\"\n    }\n  ],\n  \"featured\": true,\n  \"order\": 1\n}"
+          }
+        },
+        {
+          "name": "Update Project",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/projects/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"title\": \"Casa Moderna Actualizada\",\n  \"featured\": false\n}"
+          }
+        },
+        {
+          "name": "Delete Project",
+          "method": "DELETE",
+          "url": "http://localhost:4000/api/v1/projects/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Experience",
+      "requests": [
+        {
+          "name": "Get All Experience",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/experience"
+        },
+        {
+          "name": "Create Experience",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/experience",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"role\": \"Arquitecto Senior\",\n  \"company\": \"Estudio ABC Arquitectura\",\n  \"period\": \"2020 - Presente\",\n  \"description\": \"Lideré proyectos residenciales y comerciales\",\n  \"order\": 1\n}"
+          }
+        },
+        {
+          "name": "Update Experience",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/experience/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"period\": \"2020 - Presente\",\n  \"description\": \"Actualización de descripción\"\n}"
+          }
+        },
+        {
+          "name": "Delete Experience",
+          "method": "DELETE",
+          "url": "http://localhost:4000/api/v1/experience/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Education",
+      "requests": [
+        {
+          "name": "Get All Education",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/education"
+        },
+        {
+          "name": "Create Education",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/education",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"degree\": \"Licenciatura en Arquitectura\",\n  \"institution\": \"Universidad Autónoma de Sinaloa\",\n  \"year\": \"2015 - 2020\",\n  \"order\": 1\n}"
+          }
+        },
+        {
+          "name": "Update Education",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/education/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "name": "Delete Education",
+          "method": "DELETE",
+          "url": "http://localhost:4000/api/v1/education/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Courses",
+      "requests": [
+        {
+          "name": "Get All Courses",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/courses"
+        },
+        {
+          "name": "Create Course",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/courses",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Fotografía Arquitectónica\",\n  \"institution\": \"Domestika\",\n  \"year\": \"2024\",\n  \"order\": 1\n}"
+          }
+        },
+        {
+          "name": "Update Course",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/courses/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "name": "Delete Course",
+          "method": "DELETE",
+          "url": "http://localhost:4000/api/v1/courses/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Skills",
+      "requests": [
+        {
+          "name": "Get All Skills",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/skills"
+        },
+        {
+          "name": "Create Skill",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/skills",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Revit Architecture\",\n  \"level\": 95\n}"
+          }
+        },
+        {
+          "name": "Update Skill",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/skills/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "name": "Delete Skill",
+          "method": "DELETE",
+          "url": "http://localhost:4000/api/v1/skills/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Interests",
+      "requests": [
+        {
+          "name": "Get All Interests",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/interests"
+        },
+        {
+          "name": "Create Interest",
+          "method": "POST",
+          "url": "http://localhost:4000/api/v1/interests",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ],
+          "body": {
+            "type": "json",
+            "raw": "{\n  \"name\": \"Paisajismo\",\n  \"icon\": \"🌿\"\n}"
+          }
+        },
+        {
+          "name": "Update Interest",
+          "method": "PUT",
+          "url": "http://localhost:4000/api/v1/interests/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            },
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        {
+          "name": "Delete Interest",
+          "method": "DELETE",
+          "url": "http://localhost:4000/api/v1/interests/:id",
+          "headers": [
+            {
+              "name": "Authorization",
+              "value": "Bearer {{token}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Health",
+      "requests": [
+        {
+          "name": "Health Check",
+          "method": "GET",
+          "url": "http://localhost:4000/api/v1/health"
+        }
+      ]
+    }
+  ],
+  "environments": [
+    {
+      "name": "Local",
+      "variables": [
+        {
+          "name": "baseUrl",
+          "value": "http://localhost:4000/api/v1"
+        },
+        {
+          "name": "token",
+          "value": ""
+        }
+      ]
+    }
+  ]
+}
