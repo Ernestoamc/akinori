@@ -38,13 +38,24 @@ export interface Course {
 }
 
 export interface Skill {
+  id: string;
   name: string;
   level: number; // 0-100
+}
+
+export interface Interest {
+  id: string;
+  name: string;
+  icon: string; // Emoji character
 }
 
 export interface ArchitectProfile {
   name: string;
   title: string;
+  logoName: string;      // The text appearing in the Navbar (e.g., ARQUINORI)
+  heroSubtitle: string;  // The text above the name (e.g., Portafolio 2025)
+  heroTitlePrimary: string;   // Big Text Line 1 (e.g. ERNESTO)
+  heroTitleSecondary: string; // Big Text Line 2 (e.g. AKINORI)
   about: string;
   phone: string;
   email: string;

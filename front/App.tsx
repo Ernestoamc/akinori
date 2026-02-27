@@ -2,21 +2,38 @@ import React, { useState, useEffect } from 'react';
 import Navbar from './components/Navbar';
 import ProjectModal from './components/ProjectModal';
 import AllProjectsModal from './components/AllProjectsModal';
-import { PROJECTS, EXPERIENCE, EDUCATION, COURSES, SKILLS, PROFILE } from './constants';
+import AdminPanel from './components/AdminPanel';
+import AdminLogin from './components/AdminLogin';
+import { DataProvider, useData } from './context/DataContext';
 import { Project } from './types';
-import { ArrowRight, Download, Mail, Phone, MapPin, Instagram, Linkedin, Briefcase, GraduationCap, Check, Copy } from 'lucide-react';
+import { ArrowRight, Download, Mail, Phone, MapPin, Instagram, Linkedin, Briefcase, GraduationCap, Check, Copy, Lock, Loader2 } from 'lucide-react';
+
+// Wrapper component to provide context to the main App
+const AppWrapper: React.FC = () => {
+  return (
+    <DataProvider>
+      <App />
+    </DataProvider>
+  );
+};
 
 const App: React.FC = () => {
+  const { profile, projects, experience, education, courses, skills, interests, isAdmin, isLoading } = useData();
+  
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [isAllProjectsOpen, setIsAllProjectsOpen] = useState(false);
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [showAdminPanel, setShowAdminPanel] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   // Filter projects for the main view (Limit to 4 "Destacados")
-  const featuredProjects = PROJECTS.slice(0, 4);
+  const featuredProjects = projects.slice(0, 4);
 
   useEffect(() => {
-    document.title = `${PROFILE.name} | ${PROFILE.title}`;
-  }, []);
+    if (profile.name) {
+      document.title = `${profile.name} | ${profile.title}`;
+    }
+  }, [profile]);
 
   useEffect(() => {
     if (toastMessage) {
@@ -46,9 +63,40 @@ const App: React.FC = () => {
     setIsAllProjectsOpen(true);
   };
 
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-arch-dark flex flex-col items-center justify-center text-white">
+        <Loader2 size={48} className="animate-spin text-arch-accent mb-4" />
+        <p className="font-display tracking-widest uppercase text-sm">Cargando Portafolio...</p>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-arch-dark text-slate-200 selection:bg-arch-accent selection:text-black font-sans">
       <Navbar />
+
+      {/* Admin Interface Overlays */}
+      {showAdminLogin && (
+        <AdminLogin 
+          onClose={() => setShowAdminLogin(false)} 
+          onSuccess={() => { setShowAdminLogin(false); setShowAdminPanel(true); }} 
+        />
+      )}
+      
+      {showAdminPanel && isAdmin && (
+        <AdminPanel onClose={() => setShowAdminPanel(false)} />
+      )}
+
+      {/* Floating Admin Toggle if Logged In */}
+      {isAdmin && !showAdminPanel && (
+        <button 
+          onClick={() => setShowAdminPanel(true)}
+          className="fixed bottom-24 left-6 z-50 bg-red-600 text-white px-4 py-2 rounded-full shadow-lg font-bold text-xs hover:bg-red-700 animate-fade-in"
+        >
+          ADMIN PANEL
+        </button>
+      )}
 
       {/* Toast Notification */}
       <div className={`fixed top-24 right-6 z-50 bg-white text-black px-6 py-4 rounded shadow-2xl flex items-center gap-3 transition-all duration-300 transform ${toastMessage ? 'translate-x-0 opacity-100' : 'translate-x-10 opacity-0 pointer-events-none'}`}>
@@ -80,23 +128,23 @@ const App: React.FC = () => {
             <div className="lg:col-span-7 flex flex-col justify-center order-2 lg:order-1">
               <div className="flex items-center gap-4 mb-6 animate-fade-in">
                  <div className="h-[1px] w-12 bg-arch-accent"></div>
-                 <span className="text-arch-accent font-mono tracking-[0.2em] text-sm uppercase">Portafolio {new Date().getFullYear()}</span>
+                 <span className="text-arch-accent font-mono tracking-[0.2em] text-sm uppercase">{profile.heroSubtitle}</span>
               </div>
               
               <h1 className="font-display font-bold leading-[0.9] text-white mb-8 animate-slide-up">
-                <span className="block text-6xl md:text-8xl lg:text-[7rem] tracking-tighter uppercase">{PROFILE.name.split(' ')[0]}</span>
+                <span className="block text-6xl md:text-8xl lg:text-[7rem] tracking-tighter uppercase">{profile.heroTitlePrimary}</span>
                 <span className="block text-6xl md:text-8xl lg:text-[7rem] tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-slate-500 via-slate-200 to-white uppercase">
-                  {PROFILE.name.split(' ')[1]}
+                  {profile.heroTitleSecondary}
                 </span>
               </h1>
               
               <div className="flex flex-col md:flex-row gap-6 md:items-center mb-10 animate-slide-up delay-100">
                 <div className="px-4 py-2 bg-white/5 border-l-2 border-arch-accent">
-                  <p className="text-xl text-white font-light">{PROFILE.title}</p>
+                  <p className="text-xl text-white font-light">{profile.title}</p>
                 </div>
                 <div className="hidden md:block h-px w-16 bg-slate-700"></div>
                 <p className="text-slate-400 max-w-md leading-relaxed">
-                  {PROFILE.about}
+                  {profile.about}
                 </p>
               </div>
 
@@ -132,11 +180,11 @@ const App: React.FC = () => {
 
                 {/* Main Image Container */}
                 <div className="absolute inset-0 overflow-hidden bg-slate-800 z-10 group shadow-2xl">
-                  {PROFILE.portraitUrl ? (
+                  {profile.portraitUrl ? (
                     <>
                       <img 
-                        src={PROFILE.portraitUrl} 
-                        alt={PROFILE.name} 
+                        src={profile.portraitUrl} 
+                        alt={profile.name} 
                         className="w-full h-full object-cover transition-all duration-700 grayscale group-hover:grayscale-0 group-hover:scale-105"
                       />
                       {/* Image Overlay Texture */}
@@ -213,7 +261,7 @@ const App: React.FC = () => {
                 {/* Image */}
                 <div className="aspect-[4/5] overflow-hidden bg-slate-800">
                   <img 
-                    src={project.images[0].url} 
+                    src={project.images[0]?.url} 
                     alt={project.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                   />
@@ -251,7 +299,7 @@ const App: React.FC = () => {
               </div>
               
               <div className="space-y-12 border-l border-slate-700 ml-3 pl-8 relative">
-                {EXPERIENCE.map((job) => (
+                {experience.map((job) => (
                   <div key={job.id} className="relative group">
                     <div className="absolute -left-[39px] top-1 h-5 w-5 rounded-full border-4 border-slate-900 bg-slate-600 group-hover:bg-arch-accent transition-colors"></div>
                     <span className="text-arch-accent font-mono text-sm mb-1 block">{job.period}</span>
@@ -272,15 +320,15 @@ const App: React.FC = () => {
                     <h2 className="text-3xl font-display font-bold text-white">Formación</h2>
                    </div>
                    {/* Small formal photo */}
-                   {PROFILE.formalUrl && (
+                   {profile.formalUrl && (
                      <div className="w-16 h-16 rounded-full overflow-hidden border-2 border-arch-accent hidden md:block">
-                       <img src={PROFILE.formalUrl} alt="Formal" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" />
+                       <img src={profile.formalUrl} alt="Formal" className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all" />
                      </div>
                    )}
                 </div>
 
                 <div className="space-y-8">
-                  {EDUCATION.map((edu) => (
+                  {education.map((edu) => (
                     <div key={edu.id} className="bg-white/5 p-6 rounded-sm border border-white/5 hover:border-arch-accent/50 transition-colors relative overflow-hidden group">
                       <div className="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
                          <GraduationCap size={48} />
@@ -298,7 +346,7 @@ const App: React.FC = () => {
               <div>
                 <h3 className="text-xl font-bold text-white mb-6 border-b border-slate-700 pb-2">Cursos & Certificaciones</h3>
                 <ul className="space-y-4">
-                  {COURSES.map((course) => (
+                  {courses.map((course) => (
                     <li key={course.id} className="flex justify-between items-center text-sm p-3 hover:bg-white/5 rounded transition-colors cursor-default">
                       <span className="text-slate-300 font-medium">{course.name} <span className="text-slate-500 block text-xs font-normal mt-1">{course.institution}</span></span>
                       <span className="text-arch-accent font-mono text-xs border border-arch-accent/30 px-2 py-1 rounded">{course.year}</span>
@@ -324,8 +372,8 @@ const App: React.FC = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
               {/* Technical Skills */}
               <div className="space-y-8">
-                {SKILLS.map((skill) => (
-                  <div key={skill.name} className="group">
+                {skills.map((skill) => (
+                  <div key={skill.id} className="group">
                     <div className="flex justify-between mb-2">
                       <span className="text-sm font-medium text-slate-300 group-hover:text-white transition-colors">{skill.name}</span>
                       <span className="text-xs text-arch-accent font-mono">{skill.level}%</span>
@@ -342,22 +390,12 @@ const App: React.FC = () => {
 
               {/* Gustos / Interests Visuals - Grid Layout */}
               <div className="grid grid-cols-2 gap-4">
-                 <div className="bg-slate-800/50 border border-white/5 p-6 rounded-sm text-center flex flex-col items-center justify-center hover:bg-white/5 hover:border-arch-accent/50 transition-all duration-300 group">
-                    <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">📷</span>
-                    <span className="text-sm text-slate-400 group-hover:text-white">Fotografía</span>
-                 </div>
-                 <div className="bg-slate-800/50 border border-white/5 p-6 rounded-sm text-center flex flex-col items-center justify-center hover:bg-white/5 hover:border-arch-accent/50 transition-all duration-300 group">
-                    <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">✈️</span>
-                    <span className="text-sm text-slate-400 group-hover:text-white">Viajes</span>
-                 </div>
-                 <div className="bg-slate-800/50 border border-white/5 p-6 rounded-sm text-center flex flex-col items-center justify-center hover:bg-white/5 hover:border-arch-accent/50 transition-all duration-300 group">
-                    <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🛋️</span>
-                    <span className="text-sm text-slate-400 group-hover:text-white">Mobiliario</span>
-                 </div>
-                 <div className="bg-slate-800/50 border border-white/5 p-6 rounded-sm text-center flex flex-col items-center justify-center hover:bg-white/5 hover:border-arch-accent/50 transition-all duration-300 group">
-                    <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">🌿</span>
-                    <span className="text-sm text-slate-400 group-hover:text-white">Paisajismo</span>
-                 </div>
+                 {interests.map(interest => (
+                   <div key={interest.id} className="bg-slate-800/50 border border-white/5 p-6 rounded-sm text-center flex flex-col items-center justify-center hover:bg-white/5 hover:border-arch-accent/50 transition-all duration-300 group">
+                      <span className="text-3xl mb-3 group-hover:scale-110 transition-transform duration-300">{interest.icon}</span>
+                      <span className="text-sm text-slate-400 group-hover:text-white">{interest.name}</span>
+                   </div>
+                 ))}
               </div>
             </div>
           </div>
@@ -378,7 +416,7 @@ const App: React.FC = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
               <div 
-                onClick={() => copyToClipboard(PROFILE.email, 'Email')}
+                onClick={() => copyToClipboard(profile.email, 'Email')}
                 className="cursor-pointer flex flex-col items-center p-6 bg-white/5 border border-white/5 rounded-lg hover:border-arch-accent transition-all hover:bg-white/10 group relative"
               >
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -388,11 +426,11 @@ const App: React.FC = () => {
                   <Mail size={24} />
                 </div>
                 <h3 className="text-white font-bold mb-2">Email</h3>
-                <span className="text-slate-400 group-hover:text-white transition-colors text-sm">{PROFILE.email}</span>
+                <span className="text-slate-400 group-hover:text-white transition-colors text-sm">{profile.email}</span>
               </div>
               
               <div 
-                onClick={() => copyToClipboard(PROFILE.phone, 'Teléfono')}
+                onClick={() => copyToClipboard(profile.phone, 'Teléfono')}
                 className="cursor-pointer flex flex-col items-center p-6 bg-white/5 border border-white/5 rounded-lg hover:border-arch-accent transition-all hover:bg-white/10 group relative"
               >
                 <div className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity">
@@ -402,7 +440,7 @@ const App: React.FC = () => {
                   <Phone size={24} />
                 </div>
                 <h3 className="text-white font-bold mb-2">Teléfono</h3>
-                <span className="text-slate-400 text-sm">{PROFILE.phone}</span>
+                <span className="text-slate-400 text-sm">{profile.phone}</span>
               </div>
 
               <div className="flex flex-col items-center p-6 bg-white/5 border border-white/5 rounded-lg hover:border-arch-accent transition-colors group">
@@ -410,15 +448,15 @@ const App: React.FC = () => {
                   <MapPin size={24} />
                 </div>
                 <h3 className="text-white font-bold mb-2">Ubicación</h3>
-                <span className="text-slate-400 text-sm">{PROFILE.address}</span>
+                <span className="text-slate-400 text-sm">{profile.address}</span>
               </div>
             </div>
 
             <div className="flex justify-center space-x-6">
-              <a href="#" className="text-slate-400 hover:text-arch-accent transition-colors transform hover:scale-110">
+              <a href={profile.socials?.linkedin || "#"} className="text-slate-400 hover:text-arch-accent transition-colors transform hover:scale-110">
                 <Linkedin size={28} />
               </a>
-              <a href="#" className="text-slate-400 hover:text-arch-accent transition-colors transform hover:scale-110">
+              <a href={profile.socials?.instagram || "#"} className="text-slate-400 hover:text-arch-accent transition-colors transform hover:scale-110">
                 <Instagram size={28} />
               </a>
               <a href="#" className="px-6 py-2 border border-slate-700 rounded-full text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors flex items-center gap-2">
@@ -429,11 +467,20 @@ const App: React.FC = () => {
         </div>
       </section>
 
-      {/* FOOTER */}
-      <footer className="py-8 bg-black border-t border-slate-900 text-center">
+      {/* FOOTER - WITH HIDDEN ADMIN LOGIN BUTTON */}
+      <footer className="py-8 bg-black border-t border-slate-900 text-center relative">
         <p className="text-slate-600 text-sm">
-          © {new Date().getFullYear()} {PROFILE.name}. Todos los derechos reservados.
+          © {new Date().getFullYear()} {profile.name}. Todos los derechos reservados.
         </p>
+        
+        {/* ADMIN LOGIN BUTTON - Now slightly visible as a lock icon */}
+        <button 
+          onClick={() => !isAdmin && setShowAdminLogin(true)}
+          className="absolute bottom-4 right-4 text-slate-800 hover:text-arch-accent transition-colors z-50 p-2"
+          title="Admin Access"
+        >
+          <Lock size={14} />
+        </button>
       </footer>
 
       {/* PROJECT MODAL (Detail View) */}
@@ -447,7 +494,7 @@ const App: React.FC = () => {
       {/* ALL PROJECTS MODAL (Grid View) */}
       {isAllProjectsOpen && (
         <AllProjectsModal
-          projects={PROJECTS}
+          projects={projects}
           onClose={() => setIsAllProjectsOpen(false)}
           onSelectProject={(project) => {
             setIsAllProjectsOpen(false); // Close grid
@@ -459,4 +506,4 @@ const App: React.FC = () => {
   );
 };
 
-export default App;
+export default AppWrapper;

@@ -1,8 +1,12 @@
-import { ArchitectProfile, Project, Experience, Education, Course, Skill } from './types';
+import { ArchitectProfile, Project, Experience, Education, Course, Skill, Interest } from './types';
 
 export const PROFILE: ArchitectProfile = {
   name: "Ernesto Akinori Flores Gutiérrez",
   title: "Arquitecto & Diseñador de Interiores",
+  logoName: "ARQUINORI",
+  heroSubtitle: `Portafolio ${new Date().getFullYear()}`,
+  heroTitlePrimary: "ERNESTO",
+  heroTitleSecondary: "AKINORI",
   about: "¡Hola! Soy Ernesto Akinori, tengo 23 años. Soy arquitecto egresado por la Universidad Autónoma de Sinaloa y diseñador de interiores por la Universidad Casa Blanca. Me considero una persona creativa, que utiliza el diseño de los espacios como un medio para la solución de problemas.",
   phone: "667-485-4587",
   email: "arquinori02@gmail.com",
@@ -132,9 +136,16 @@ export const COURSES: Course[] = [
 ];
 
 export const SKILLS: Skill[] = [
-  { name: "Diseño Arquitectónico", level: 95 },
-  { name: "Diseño de Interiores", level: 90 },
-  { name: "Diseño de Mobiliario", level: 85 },
-  { name: "AutoCAD / Revit", level: 90 },
-  { name: "Renderizado 3D", level: 80 }
+  { id: "s1", name: "Diseño Arquitectónico", level: 95 },
+  { id: "s2", name: "Diseño de Interiores", level: 90 },
+  { id: "s3", name: "Diseño de Mobiliario", level: 85 },
+  { id: "s4", name: "AutoCAD / Revit", level: 90 },
+  { id: "s5", name: "Renderizado 3D", level: 80 }
+];
+
+export const INTERESTS: Interest[] = [
+  { id: "i1", name: "Fotografía", icon: "📷" },
+  { id: "i2", name: "Viajes", icon: "✈️" },
+  { id: "i3", name: "Mobiliario", icon: "🛋️" },
+  { id: "i4", name: "Paisajismo", icon: "🌿" }
 ];

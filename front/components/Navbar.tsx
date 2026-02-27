@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Menu, X } from 'lucide-react';
+import { useData } from '../context/DataContext';
 
 const Navbar: React.FC = () => {
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { profile } = useData();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -48,7 +50,7 @@ const Navbar: React.FC = () => {
           onClick={(e) => handleNavClick(e, '#home')}
           className="text-2xl font-display font-bold tracking-tighter text-white"
         >
-          ARQUINORI<span className="text-arch-accent">.</span>
+          {profile.logoName || "ARQUINORI"}<span className="text-arch-accent">.</span>
         </a>
 
         {/* Desktop Menu */}
