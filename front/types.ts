@@ -67,4 +67,5 @@ export interface ArchitectProfile {
   };
   portraitUrl?: string; // Main hero image
   formalUrl?: string;   // Secondary formal image
+  cvUrl?: string;       // Resume PDF URL
 }

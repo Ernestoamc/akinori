@@ -459,9 +459,20 @@ const App: React.FC = () => {
               <a href={profile.socials?.instagram || "#"} className="text-slate-400 hover:text-arch-accent transition-colors transform hover:scale-110">
                 <Instagram size={28} />
               </a>
-              <a href="#" className="px-6 py-2 border border-slate-700 rounded-full text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors flex items-center gap-2">
-                <Download size={16} /> Descargar CV
-              </a>
+              {profile.cvUrl ? (
+                <a
+                  href={profile.cvUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-2 border border-slate-700 rounded-full text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors flex items-center gap-2"
+                >
+                  <Download size={16} /> Descargar CV
+                </a>
+              ) : (
+                <span className="px-6 py-2 border border-slate-800 rounded-full text-sm font-medium text-slate-600 cursor-not-allowed flex items-center gap-2">
+                  <Download size={16} /> CV no disponible
+                </span>
+              )}
             </div>
           </div>
         </div>

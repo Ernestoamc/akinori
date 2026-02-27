@@ -63,8 +63,9 @@ const ProfileEditor: React.FC<{
   profile: ArchitectProfile; 
   updateProfile: (p: ArchitectProfile) => Promise<void>;
   handleImageUpload: (e: React.ChangeEvent<HTMLInputElement>, cb: (url: string) => void) => Promise<void>;
+  handlePdfUpload: (e: React.ChangeEvent<HTMLInputElement>, cb: (url: string) => void) => Promise<void>;
   requestConfirmation: (msg: string, type: 'save' | 'delete', action: () => Promise<void> | void, successMessage?: string, errorMessage?: string) => void;
-}> = ({ profile, updateProfile, handleImageUpload, requestConfirmation }) => {
+}> = ({ profile, updateProfile, handleImageUpload, handlePdfUpload, requestConfirmation }) => {
   const [localProfile, setLocalProfile] = useState<ArchitectProfile>(profile);
 
   useEffect(() => {
@@ -216,6 +217,53 @@ const ProfileEditor: React.FC<{
           </div>
         </div>
 
+        {/* CV PDF */}
+        <div className="space-y-4">
+          <h4 className="text-arch-accent text-sm font-bold uppercase border-b border-slate-700 pb-2">Currículum (PDF)</h4>
+          <div className="flex flex-col md:flex-row md:items-center gap-3">
+            <input
+              className="flex-1 bg-slate-900 border border-slate-700 p-2 rounded text-white text-sm"
+              placeholder="https://.../cv.pdf"
+              value={localProfile.cvUrl || ''}
+              onChange={e => setLocalProfile({ ...localProfile, cvUrl: e.target.value })}
+            />
+            <label className="cursor-pointer bg-slate-700 px-3 py-2 rounded text-xs text-white hover:bg-slate-600 transition-colors text-center">
+              Subir PDF
+              <input
+                type="file"
+                className="hidden"
+                accept="application/pdf,.pdf"
+                onChange={(e) => handlePdfUpload(e, (url) => setLocalProfile({ ...localProfile, cvUrl: url }))}
+              />
+            </label>
+          </div>
+          {localProfile.cvUrl && (
+            <div className="flex items-center gap-4">
+              <a
+                href={localProfile.cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs text-arch-accent hover:text-yellow-500"
+              >
+                Ver PDF actual
+              </a>
+              <button
+                type="button"
+                onClick={() => requestConfirmation(
+                  '¿Quitar el CV actual del perfil?',
+                  'delete',
+                  () => setLocalProfile({ ...localProfile, cvUrl: '' }),
+                  'CV removido del formulario. Guarda para aplicar.',
+                  'No se pudo quitar el CV.'
+                )}
+                className="text-xs text-red-400 hover:text-red-300"
+              >
+                Quitar CV
+              </button>
+            </div>
+          )}
+        </div>
+
         <button type="submit" className="w-full py-3 bg-arch-accent text-black font-bold rounded hover:bg-yellow-600 mt-6 shadow-lg shadow-yellow-900/20">
           Guardar Cambios del Perfil
         </button>
@@ -293,8 +341,12 @@ const AdminPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     });
   };
 
-  // --- HANDLERS FOR IMAGE UPLOAD ---
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
+  // --- FILE UPLOAD HELPERS (IMAGES / PDF) ---
+  const handleFileUpload = async (
+    e: React.ChangeEvent<HTMLInputElement>,
+    callback: (url: string) => void,
+    kind: 'image' | 'pdf'
+  ) => {
     const file = e.target.files?.[0];
     if (!file) {
       return;
@@ -308,7 +360,7 @@ const AdminPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
     }
 
     const formData = new FormData();
-    formData.append('image', file);
+    formData.append('file', file);
 
     try {
       const response = await fetch(`${API_URL}/upload`, {
@@ -320,22 +372,30 @@ const AdminPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
       });
 
       if (!response.ok) {
-        throw new Error(`Error al subir imagen: ${response.status}`);
+        throw new Error(`Error al subir archivo: ${response.status}`);
       }
 
       const payload = await response.json() as { url?: string };
       if (!payload.url) {
-        throw new Error('La API no devolvió URL de imagen.');
+        throw new Error('La API no devolvió URL del archivo.');
       }
 
       callback(payload.url);
-      showNotification('success', 'Imagen subida correctamente. Recuerda guardar el perfil.');
+      showNotification('success', kind === 'pdf' ? 'PDF subido correctamente. Recuerda guardar el perfil.' : 'Imagen subida correctamente. Recuerda guardar el perfil.');
     } catch (error) {
       console.error(error);
-      showNotification('error', 'No se pudo subir la imagen. Revisa sesión admin, backend y Cloudinary.');
+      showNotification('error', kind === 'pdf' ? 'No se pudo subir el PDF. Revisa sesión admin, backend y Cloudinary.' : 'No se pudo subir la imagen. Revisa sesión admin, backend y Cloudinary.');
     } finally {
       e.target.value = '';
     }
+  };
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
+    await handleFileUpload(e, callback, 'image');
+  };
+
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>, callback: (url: string) => void) => {
+    await handleFileUpload(e, callback, 'pdf');
   };
 
   // --- RENDERERS ---
@@ -839,6 +899,7 @@ const AdminPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             profile={profile} 
             updateProfile={updateProfile} 
             handleImageUpload={handleImageUpload}
+            handlePdfUpload={handlePdfUpload}
             requestConfirmation={requestConfirmation}
           />
         )}

@@ -14,6 +14,7 @@ const buildProfileResponse = (profile) => ({
   address: profile.address || '',
   portraitUrl: profile.portraitUrl || '',
   formalUrl: profile.formalUrl || '',
+  cvUrl: profile.cvUrl || '',
   socials: {
     linkedin: profile.socials?.linkedin || '',
     instagram: profile.socials?.instagram || '',
@@ -37,6 +38,7 @@ const buildProfileUpdate = (data, existingSocials = {}) => {
   if (data.address !== undefined) update.address = data.address;
   if (data.portraitUrl !== undefined) update.portraitUrl = data.portraitUrl;
   if (data.formalUrl !== undefined) update.formalUrl = data.formalUrl;
+  if (data.cvUrl !== undefined) update.cvUrl = data.cvUrl;
 
   if (data.socials !== undefined) {
     update.socials = {

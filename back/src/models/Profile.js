@@ -14,6 +14,7 @@ const profileSchema = new mongoose.Schema(
     address: { type: String, default: '' },
     portraitUrl: { type: String, default: '' },
     formalUrl: { type: String, default: '' },
+    cvUrl: { type: String, default: '' },
     socials: {
       linkedin: { type: String, default: '' },
       instagram: { type: String, default: '' },

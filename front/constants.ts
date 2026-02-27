@@ -18,7 +18,8 @@ export const PROFILE: ArchitectProfile = {
     behance: "https://behance.net/"
   },
   portraitUrl: "/ernesto-casco.png", // Ensure this file exists in your public folder
-  formalUrl: "/ernesto-traje.png"    // Ensure this file exists in your public folder
+  formalUrl: "/ernesto-traje.png",   // Ensure this file exists in your public folder
+  cvUrl: ""
 };
 
 // Keeping projects as high-quality placeholders until user provides specific project images/details

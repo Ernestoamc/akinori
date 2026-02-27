@@ -2,7 +2,7 @@ const { v2: cloudinary } = require('cloudinary');
 const configureCloudinary = require('../config/cloudinary');
 const asyncHandler = require('../utils/asyncHandler');
 
-const uploadImage = asyncHandler(async (req, res) => {
+const uploadFile = asyncHandler(async (req, res) => {
   const cloudinaryClient = configureCloudinary();
 
   if (!cloudinaryClient) {
@@ -19,13 +19,23 @@ const uploadImage = asyncHandler(async (req, res) => {
     });
   }
 
-  const uploadPromise = new Promise((resolve, reject) => {
-    const uploadStream = cloudinary.uploader.upload_stream(
-      {
+  const isPdf = req.file.mimetype === 'application/pdf';
+
+  const uploadOptions = isPdf
+    ? {
+        folder: 'portfolio/cv',
+        resource_type: 'raw',
+        format: 'pdf',
+      }
+    : {
         folder: 'portfolio',
         resource_type: 'image',
         transformation: [{ quality: 'auto', fetch_format: 'auto' }],
-      },
+      };
+
+  const uploadPromise = new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      uploadOptions,
       (error, result) => {
         if (error) reject(error);
         else resolve(result);
@@ -39,12 +49,12 @@ const uploadImage = asyncHandler(async (req, res) => {
 
   res.status(200).json({
     ok: true,
-    message: 'Imagen subida correctamente.',
+    message: isPdf ? 'PDF subido correctamente.' : 'Archivo subido correctamente.',
     url: result.secure_url,
     publicId: result.public_id,
   });
 });
 
 module.exports = {
-  uploadImage,
+  uploadFile,
 };
