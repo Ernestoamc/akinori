@@ -1,6 +1,13 @@
 const asyncHandler = require('../utils/asyncHandler');
 const Profile = require('../models/Profile');
 
+const toSafeFileName = (value = 'CV') =>
+  value
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-zA-Z0-9-_]+/g, '-')
+    .replace(/^-+|-+$/g, '') || 'CV';
+
 const buildProfileResponse = (profile) => ({
   name: profile.name || '',
   title: profile.title || '',
@@ -85,7 +92,36 @@ const updateProfile = asyncHandler(async (req, res) => {
   });
 });
 
+const downloadCv = asyncHandler(async (_req, res) => {
+  const profile = await Profile.findOne({ isSingleton: true }).lean();
+  const cvUrl = profile?.cvUrl;
+
+  if (!cvUrl) {
+    return res.status(404).json({
+      ok: false,
+      message: 'No hay CV disponible para descargar.',
+    });
+  }
+
+  const upstream = await fetch(cvUrl);
+
+  if (!upstream.ok) {
+    return res.status(502).json({
+      ok: false,
+      message: 'No se pudo obtener el archivo CV desde almacenamiento.',
+    });
+  }
+
+  const fileBuffer = Buffer.from(await upstream.arrayBuffer());
+  const baseName = toSafeFileName(profile?.name || 'CV');
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="${baseName}-CV.pdf"`);
+  res.status(200).send(fileBuffer);
+});
+
 module.exports = {
   getProfile,
   updateProfile,
+  downloadCv,
 };

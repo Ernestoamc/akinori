@@ -8,6 +8,8 @@ import { DataProvider, useData } from './context/DataContext';
 import { Project } from './types';
 import { ArrowRight, Download, Mail, Phone, MapPin, Instagram, Linkedin, Briefcase, GraduationCap, Check, Copy, Lock, Loader2 } from 'lucide-react';
 
+const API_URL = (import.meta.env.VITE_API_URL || 'http://localhost:4000/api/v1').replace(/\/+$/, '');
+
 // Wrapper component to provide context to the main App
 const AppWrapper: React.FC = () => {
   return (
@@ -461,9 +463,7 @@ const App: React.FC = () => {
               </a>
               {profile.cvUrl ? (
                 <a
-                  href={profile.cvUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href={`${API_URL}/profile/download-cv`}
                   className="px-6 py-2 border border-slate-700 rounded-full text-sm font-medium text-slate-300 hover:bg-slate-800 transition-colors flex items-center gap-2"
                 >
                   <Download size={16} /> Descargar CV
