@@ -11,7 +11,7 @@ interface AllProjectsModalProps {
 const AllProjectsModal: React.FC<AllProjectsModalProps> = ({ projects, onClose, onSelectProject }) => {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 backdrop-blur-md animate-fade-in overflow-y-auto">
-      <div className="min-h-screen w-full container mx-auto px-6 py-12 relative">
+      <div className="min-h-screen w-full container mx-auto px-6 md:px-[50px] py-12 relative">
         
         {/* Header */}
         <div className="flex justify-between items-center mb-12 sticky top-0 bg-black/95 py-4 z-10 border-b border-white/10">

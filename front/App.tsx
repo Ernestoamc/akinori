@@ -121,7 +121,7 @@ const App: React.FC = () => {
         <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-arch-accent/5 rounded-full blur-[120px]"></div>
         <div className="absolute bottom-1/4 right-1/4 w-[30rem] h-[30rem] bg-slate-700/10 rounded-full blur-[100px]"></div>
 
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-6 md:px-[50px] relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             
             {/* Left Content - Typography Focused */}
@@ -235,7 +235,7 @@ const App: React.FC = () => {
 
       {/* PROJECTS SECTION */}
       <section id="projects" className="py-24 bg-black/30 relative scroll-mt-28">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 md:px-[50px]">
           <div className="flex flex-col md:flex-row justify-between items-end mb-16">
             <div>
               <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-2">Proyectos Destacados</h2>
@@ -288,7 +288,7 @@ const App: React.FC = () => {
 
       {/* EXPERIENCE & TIMELINE SECTION */}
       <section id="experience" className="py-24 bg-slate-900 border-y border-white/5 scroll-mt-28">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 md:px-[50px]">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
             
             {/* Experience Column */}
@@ -362,7 +362,7 @@ const App: React.FC = () => {
 
       {/* SKILLS & INTERESTS */}
       <section className="py-24 bg-arch-dark">
-        <div className="container mx-auto px-6">
+        <div className="container mx-auto px-6 md:px-[50px]">
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-2xl p-8 md:p-12 border border-white/5 shadow-2xl relative overflow-hidden">
             {/* Background pattern for box */}
             <div className="absolute inset-0 opacity-5" style={{ backgroundImage: 'radial-gradient(#ca8a04 1px, transparent 1px)', backgroundSize: '20px 20px' }}></div>
@@ -407,7 +407,7 @@ const App: React.FC = () => {
         {/* Decorative Grid */}
         <div className="absolute inset-0" style={{ backgroundImage: 'linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px)', backgroundSize: '40px 40px' }}></div>
         
-        <div className="container mx-auto px-6 relative z-10">
+        <div className="container mx-auto px-6 md:px-[50px] relative z-10">
           <div className="max-w-4xl mx-auto text-center">
             <h2 className="text-4xl md:text-5xl font-display font-bold text-white mb-8">Construyamos Algo Extraordinario</h2>
             <p className="text-slate-400 mb-12 text-lg">
