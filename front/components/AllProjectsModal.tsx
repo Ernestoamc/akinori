@@ -30,17 +30,26 @@ const AllProjectsModal: React.FC<AllProjectsModalProps> = ({ projects, onClose, 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 pb-20">
           {projects.map((project) => (
+            (() => {
+              const coverImageUrl = project.images?.[0]?.url;
+              return (
             <div 
               key={project.id}
               onClick={() => onSelectProject(project)}
               className="group cursor-pointer bg-slate-900 border border-white/5 hover:border-arch-accent/50 transition-all duration-300"
             >
               <div className="aspect-square overflow-hidden relative">
-                <img 
-                  src={project.images[0].url} 
-                  alt={project.title}
-                  className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
-                />
+                {coverImageUrl ? (
+                  <img 
+                    src={coverImageUrl} 
+                    alt={project.title}
+                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-slate-800 flex items-center justify-center text-xs text-slate-500">
+                    Sin imagen
+                  </div>
+                )}
                 <div className="absolute inset-0 bg-black/20 group-hover:bg-transparent transition-colors"></div>
                 <div className="absolute top-4 right-4 bg-black/80 backdrop-blur text-arch-accent text-xs font-bold px-2 py-1 uppercase tracking-widest">
                   {project.year}
@@ -60,6 +69,8 @@ const AllProjectsModal: React.FC<AllProjectsModalProps> = ({ projects, onClose, 
                 </div>
               </div>
             </div>
+              );
+            })()
           ))}
         </div>
 

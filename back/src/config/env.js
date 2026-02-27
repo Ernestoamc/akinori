@@ -2,7 +2,7 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
-const clientUrlRaw = process.env.CLIENT_URL || '*';
+const clientUrlRaw = process.env.CLIENT_URL || 'https://arquinori.vercel.app';
 const clientUrlList = clientUrlRaw
   .split(',')
   .map((value) => value.trim())

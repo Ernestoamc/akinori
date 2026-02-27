@@ -261,7 +261,7 @@ const App: React.FC = () => {
                 {/* Image */}
                 <div className="aspect-[4/5] overflow-hidden bg-slate-800">
                   <img 
-                    src={project.images[0]?.url} 
+                    src={project.images?.[0]?.url} 
                     alt={project.title} 
                     className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 opacity-80 group-hover:opacity-100"
                   />

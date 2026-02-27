@@ -809,7 +809,7 @@ const AdminPanel: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 {projects.map(project => (
                   <div key={project.id} className="bg-slate-800 rounded border border-slate-700 overflow-hidden group">
                     <div className="aspect-video bg-slate-900 relative">
-                      <img src={project.images[0]?.url} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
+                      <img src={project.images?.[0]?.url} className="w-full h-full object-cover opacity-60 group-hover:opacity-100 transition-opacity" />
                     </div>
                     <div className="p-4">
                       <h4 className="font-bold text-white mb-1">{project.title}</h4>
