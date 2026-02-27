@@ -218,8 +218,6 @@ CLOUDINARY_API_KEY=...
 CLOUDINARY_API_SECRET=...
 CLIENT_URL=http://localhost:3000
 JWT_SECRET=tu_secreto_super_seguro
-ADMIN_PASSWORD=
-ADMIN_PASSWORD_HASH=$2b$10$tu_hash_bcrypt
 ```
 
 ## Soporte

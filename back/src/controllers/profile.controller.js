@@ -8,6 +8,31 @@ const toSafeFileName = (value = 'CV') =>
     .replace(/[^a-zA-Z0-9-_]+/g, '-')
     .replace(/^-+|-+$/g, '') || 'CV';
 
+const toAttachmentUrl = (url = '', fallbackName = 'CV') => {
+  if (!url) return '';
+
+  const safeName = `${toSafeFileName(fallbackName)}-CV`;
+
+  try {
+    const parsed = new URL(url);
+    const isCloudinary = parsed.hostname.includes('res.cloudinary.com');
+
+    if (!isCloudinary) {
+      return url;
+    }
+
+    parsed.pathname = parsed.pathname.replace('/upload/', '/upload/fl_attachment/');
+
+    if (!parsed.searchParams.has('filename')) {
+      parsed.searchParams.set('filename', `${safeName}.pdf`);
+    }
+
+    return parsed.toString();
+  } catch {
+    return url;
+  }
+};
+
 const buildProfileResponse = (profile) => ({
   name: profile.name || '',
   title: profile.title || '',
@@ -103,21 +128,9 @@ const downloadCv = asyncHandler(async (_req, res) => {
     });
   }
 
-  const upstream = await fetch(cvUrl);
+  const attachmentUrl = toAttachmentUrl(cvUrl, profile?.name || 'CV');
 
-  if (!upstream.ok) {
-    return res.status(502).json({
-      ok: false,
-      message: 'No se pudo obtener el archivo CV desde almacenamiento.',
-    });
-  }
-
-  const fileBuffer = Buffer.from(await upstream.arrayBuffer());
-  const baseName = toSafeFileName(profile?.name || 'CV');
-
-  res.setHeader('Content-Type', 'application/pdf');
-  res.setHeader('Content-Disposition', `attachment; filename="${baseName}-CV.pdf"`);
-  res.status(200).send(fileBuffer);
+  res.redirect(302, attachmentUrl);
 });
 
 module.exports = {
